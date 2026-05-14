@@ -3,11 +3,36 @@
 Reads `atop -P PRC` output from stdin and renders a CPU flame chart.
 Non-matching lines are silently ignored.
 
-## Build
+## Install
+
+The fastest way — fetches and builds a tagged release into `$GOBIN` (or `$HOME/go/bin`):
 
 ```bash
-go mod tidy
+go install github.com/rachlenko/atop-flame@latest          # latest tag
+go install github.com/rachlenko/atop-flame@v0.0.2          # a specific tag
+```
+
+`--version` reports the installed semver tag automatically (read from the binary's embedded module info).
+
+### Build from source
+
+```bash
+git clone https://github.com/rachlenko/atop-flame
+cd atop-flame
+make build            # writes .bin/atop-flame using vendored deps
+# or, plain Go:
 go build -o atop-flame .
+```
+
+### Prebuilt binaries
+
+See the [Releases](https://github.com/rachlenko/atop-flame/releases) page for static binaries for linux/darwin × amd64/arm64.
+
+### Docker
+
+```bash
+docker pull ghcr.io/rachlenko/atop-flame:latest
+atop -P ALL | docker run --rm -i ghcr.io/rachlenko/atop-flame:latest
 ```
 
 ## Usage

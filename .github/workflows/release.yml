@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag to build for (e.g. v0.0.1) — artifacts only, no release'
+        description: 'Version tag to build for (e.g. v0.0.2) — artifacts only, no release'
         required: true
         default: 'v0.0.0'
 
@@ -29,8 +29,8 @@ jobs:
   resolve-version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.v.outputs.version }}   # e.g. v0.0.1
-      semver:  ${{ steps.v.outputs.semver }}    # e.g. 0.0.1
+      version: ${{ steps.v.outputs.version }}   # e.g. v0.0.2
+      semver:  ${{ steps.v.outputs.semver }}    # e.g. 0.0.2
     steps:
       - id: v
         shell: bash

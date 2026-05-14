@@ -1,4 +1,4 @@
-module atop-flame
+module github.com/rachlenko/atop-flame
 
 go 1.21
 

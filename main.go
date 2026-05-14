@@ -6,17 +6,35 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime/debug"
 )
 
 // appVersion is overridden at build time via -ldflags "-X main.appVersion=…"
-// in CI (release.yml) and via the Makefile's GIT_REV-derived value. The
-// literal here is only used for bare `go run`/`go build .` without ldflags.
-var appVersion = "0.0.1"
+// in CI (release.yml) and via the Makefile's GIT_REV-derived value. When left
+// at the sentinel "dev", resolveVersion() asks the Go module system for the
+// version stamped by `go install` (e.g. v0.0.2 for `…@v0.0.2`).
+var appVersion = "dev"
 
 const (
 	appName           = "atop-flame"
 	defaultHTMLOutput = "atop-flame.html"
 )
+
+// resolveVersion returns the most specific version string available:
+//   - the ldflags-injected value when one was supplied (CI/Makefile builds);
+//   - otherwise the module version stamped by `go install` (semver tag);
+//   - otherwise "dev".
+func resolveVersion() string {
+	if appVersion != "dev" {
+		return appVersion
+	}
+	if info, ok := debug.ReadBuildInfo(); ok {
+		if v := info.Main.Version; v != "" && v != "(devel)" {
+			return v
+		}
+	}
+	return appVersion
+}
 
 var helpText = fmt.Sprintf(`%s %s — atop -P flame charts
 
@@ -58,7 +76,7 @@ EXAMPLES
   # render HTML and open it in firefox
   atop -P ALL | %s --html-output --browser firefox
 `,
-	appName, appVersion,
+	appName, resolveVersion(),
 	appName, appName,
 	appName, appName, appName,
 )
@@ -80,7 +98,7 @@ func main() {
 		return
 	}
 	if *fVersion {
-		fmt.Printf("%s %s\n", appName, appVersion)
+		fmt.Printf("%s %s\n", appName, resolveVersion())
 		return
 	}
 
