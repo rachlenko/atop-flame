@@ -71,6 +71,30 @@ atop -P PRC | ./atop-flame --top 50
 | `--browser PATH` | browser executable to open the HTML file in (omit to just write the file) |
 | `--top N` | show top N processes by CPU ticks (default: 30) |
 
+## Documentation
+
+The long-form docs live under [`docs/`](docs/) and are built with
+[Zensical](https://zensical.org), a Rust + Python static site generator from
+the Material for MkDocs team:
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install zensical
+zensical serve           # http://localhost:8000
+zensical build           # writes site/ for deployment
+```
+
+Pages:
+
+- [`docs/index.md`](docs/index.md) — overview + hero screenshot
+- [`docs/installation.md`](docs/installation.md) — `go install`, Docker, source
+- [`docs/usage.md`](docs/usage.md) — every flag with examples
+- [`docs/metrics.md`](docs/metrics.md) — full atop-label catalog, one screenshot per section
+- [`docs/architecture.md`](docs/architecture.md) — parser → aggregate → renderers
+
+Zensical is pre-1.0; if config keys in `zensical.toml` get renamed upstream,
+update them per the [Zensical docs](https://zensical.org/docs/) before re-running.
+
 ## Dependencies
 
 - [`github.com/go-echarts/go-echarts/v2`](https://github.com/go-echarts/go-echarts) — HTML chart rendering

@@ -23,6 +23,10 @@ atop-flame.html
 README.md
 LICENSE
 *.md
+docs/
+site/
+zensical.toml
+.venv/
 Dockerfile
 .dockerignore
 

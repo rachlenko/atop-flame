@@ -14,6 +14,10 @@ coverage_no_mocks.out
 # accidentally land in commits. (test cases write to tmpdirs, not here.)
 /atop-flame.html
 
+# ── zensical docs build ──────────────────────────────────────────────────────
+/site/
+/.venv/
+
 # ── editor / IDE ─────────────────────────────────────────────────────────────
 .idea/
 .vscode/

@@ -1,0 +1,18 @@
+# Zensical configuration — https://zensical.org/docs/setup/basics/
+#
+# Zensical is pre-1.0 (announced 2025-11). Key names may evolve. If `zensical
+# serve` complains about a key below, check the upstream reference at
+# https://zensical.org/docs/ and adjust — this file aims at the minimum that
+# the generator reliably consumes today.
+
+[site]
+name        = "atop-flame"
+description = "atop -P flame charts for CPU, memory, disk, network, GPU"
+url         = "https://rachlenko.github.io/atop-flame/"
+
+[repo]
+name = "rachlenko/atop-flame"
+url  = "https://github.com/rachlenko/atop-flame"
+
+# Content lives under ./docs/ (the default). The homepage is docs/index.md.
+# Images are referenced from Markdown via relative paths under docs/assets/.
