@@ -1,7 +1,16 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.jpg">
+    <img alt="atop-flame logo" src="docs/assets/logo-light.jpg" width="520">
+  </picture>
+</p>
+
 # atop-flame
 
-Reads `atop -P PRC` output from stdin and renders a CPU flame chart.
-Non-matching lines are silently ignored.
+Reads `atop -P` output from stdin and renders flame-style charts for every
+metric category present in the stream — CPU, memory, disk, network, GPU,
+devices, and system summary. Unknown / malformed lines are silently ignored;
+sections without data are skipped entirely.
 
 ## Install
 

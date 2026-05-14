@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.jpg">
+    <img alt="atop-flame logo" src="assets/logo-light.jpg" width="520">
+  </picture>
+</p>
+
 # atop-flame
 
 > Flame-style "who eats the most resources" charts from `atop -P` output.
