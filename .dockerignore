@@ -1,0 +1,36 @@
+# Keep the docker build context small and free of host-built artifacts.
+
+# ── VCS ──────────────────────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+
+# ── host build outputs (would mask the in-container go build) ────────────────
+.bin/
+.release/
+
+# ── go test / coverage ───────────────────────────────────────────────────────
+*.test
+*.prof
+coverage.out
+coverage.html
+coverage_no_mocks.out
+
+# ── generated charts ─────────────────────────────────────────────────────────
+atop-flame.html
+
+# ── docs / meta (not needed at build time) ───────────────────────────────────
+README.md
+LICENSE
+*.md
+Dockerfile
+.dockerignore
+
+# ── editor / IDE / OS ────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

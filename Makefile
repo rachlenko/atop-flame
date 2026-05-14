@@ -13,6 +13,9 @@ DOCKER_IMAGE=ghcr.io/yourorg/$(APP)
 BINARY=.bin/$(APP)
 LDFLAGS=-ldflags "-X main.appVersion=$(REV) -s -w"
 
+# build flags — use vendored deps when vendor/ is present
+GOFLAGS=$(if $(wildcard vendor/modules.txt),-mod=vendor,)
+
 ## ── default ───────────────────────────────────────────────────────────────────
 
 all: test build
@@ -21,13 +24,13 @@ all: test build
 
 build:
 	mkdir -p .bin
-	go build $(LDFLAGS) -o $(BINARY) .
+	go build $(GOFLAGS) $(LDFLAGS) -o $(BINARY) .
 	@echo "binary: $(BINARY)"
 
 # build and copy as plain 'atop-flame' (no branch suffix)
 build-release:
 	mkdir -p .bin
-	go build $(LDFLAGS) -o $(BINARY).$(BRANCH) .
+	go build $(GOFLAGS) $(LDFLAGS) -o $(BINARY).$(BRANCH) .
 	cp $(BINARY).$(BRANCH) $(BINARY)
 	@echo "binary: $(BINARY)"
 
@@ -36,55 +39,55 @@ build-all: build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-a
 
 build-linux-amd64:
 	mkdir -p .bin
-	GOOS=linux   GOARCH=amd64  go build $(LDFLAGS) -o .bin/$(APP)-linux-amd64   .
+	GOOS=linux   GOARCH=amd64  go build $(GOFLAGS) $(LDFLAGS) -o .bin/$(APP)-linux-amd64   .
 
 build-linux-arm64:
 	mkdir -p .bin
-	GOOS=linux   GOARCH=arm64  go build $(LDFLAGS) -o .bin/$(APP)-linux-arm64   .
+	GOOS=linux   GOARCH=arm64  go build $(GOFLAGS) $(LDFLAGS) -o .bin/$(APP)-linux-arm64   .
 
 build-darwin-amd64:
 	mkdir -p .bin
-	GOOS=darwin  GOARCH=amd64  go build $(LDFLAGS) -o .bin/$(APP)-darwin-amd64  .
+	GOOS=darwin  GOARCH=amd64  go build $(GOFLAGS) $(LDFLAGS) -o .bin/$(APP)-darwin-amd64  .
 
 build-darwin-arm64:
 	mkdir -p .bin
-	GOOS=darwin  GOARCH=arm64  go build $(LDFLAGS) -o .bin/$(APP)-darwin-arm64  .
+	GOOS=darwin  GOARCH=arm64  go build $(GOFLAGS) $(LDFLAGS) -o .bin/$(APP)-darwin-arm64  .
 
 build-windows-amd64:
 	mkdir -p .bin
-	GOOS=windows GOARCH=amd64  go build $(LDFLAGS) -o .bin/$(APP)-windows-amd64.exe .
+	GOOS=windows GOARCH=amd64  go build $(GOFLAGS) $(LDFLAGS) -o .bin/$(APP)-windows-amd64.exe .
 
 ## ── install ───────────────────────────────────────────────────────────────────
 
 install:
-	go install $(LDFLAGS) .
+	go install $(GOFLAGS) $(LDFLAGS) .
 
 ## ── test ──────────────────────────────────────────────────────────────────────
 
 test:
 	go clean -testcache
-	go test -race -coverprofile=coverage.out ./...
+	go test $(GOFLAGS) -race -coverprofile=coverage.out ./...
 	go tool cover -func=coverage.out
 	rm -f coverage.out
 
 test-verbose:
 	go clean -testcache
-	go test -v -race -coverprofile=coverage.out ./...
+	go test $(GOFLAGS) -v -race -coverprofile=coverage.out ./...
 	go tool cover -func=coverage.out
 	rm -f coverage.out
 
 test-cover: ## run tests and open HTML coverage report
 	go clean -testcache
-	go test -race -coverprofile=coverage.out ./...
+	go test $(GOFLAGS) -race -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "coverage report: coverage.html"
 	rm -f coverage.out
 
 race:
-	go test -race -timeout=60s ./...
+	go test $(GOFLAGS) -race -timeout=60s ./...
 
 bench:
-	go test -bench=. -benchmem ./...
+	go test $(GOFLAGS) -bench=. -benchmem ./...
 
 ## ── quality ───────────────────────────────────────────────────────────────────
 
@@ -96,7 +99,7 @@ fmt:
 	goimports -w $$(find . -type f -name "*.go" -not -path "./vendor/*")
 
 vet:
-	go vet ./...
+	go vet $(GOFLAGS) ./...
 
 check: vet lint test ## run all quality checks (vet + lint + test)
 
@@ -154,10 +157,18 @@ smoke: build
 deps:
 	go mod tidy
 	go mod verify
+	go mod vendor
+
+# refresh vendor/ from go.mod (run after editing dependencies)
+vendor:
+	go mod tidy
+	go mod vendor
+	@echo "vendor/ refreshed"
 
 deps-upgrade:
 	go get -u ./...
 	go mod tidy
+	go mod vendor
 
 ## ── docker ────────────────────────────────────────────────────────────────────
 
@@ -229,7 +240,7 @@ help: ## show this help
 	test test-verbose test-cover race bench \
 	lint fmt vet check \
 	sample demo demo-html smoke \
-	deps deps-upgrade \
+	deps deps-upgrade vendor \
 	docker-build docker-push docker-run docker-demo \
 	tag release \
 	clean version help

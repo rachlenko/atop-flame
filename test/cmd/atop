@@ -1,0 +1,4 @@
+atop -r /var/log/atop/atop_$(date +%Y%m%d) \
+     -b $(date -d '10 minutes ago' '+%H:%M') \
+     -e $(date '+%H:%M') \
+     -P PRC,PRM,PRD,CPU,CPL,MEM,SWP,DSK

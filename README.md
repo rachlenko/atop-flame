@@ -22,14 +22,11 @@ atop -r /var/log/atop/atop_$(date +%Y%m%d) \
      -e $(date '+%H:%M') \
      -P PRC | ./atop-flame
 
-# HTML chart, auto-open in default browser
+# HTML chart, written to ./atop-flame.html
 atop -P PRC | ./atop-flame --html-output
 
-# HTML chart, specific output file and browser
-atop -P PRC | ./atop-flame \
-     --html-output \
-     --output /tmp/report.html \
-     --browser firefox
+# HTML chart, open in firefox
+atop -P PRC | ./atop-flame --html-output --browser firefox
 
 # show top 50 processes
 atop -P PRC | ./atop-flame --top 50
@@ -45,9 +42,8 @@ atop -P PRC | ./atop-flame --top 50
 |---|---|
 | `--help` | show help and exit |
 | `--version` | show version and exit |
-| `--html-output` | generate HTML chart and open in browser |
-| `--output FILE` | output file path for `--html-output` (default: temp file) |
-| `--browser PATH` | browser executable (default: `xdg-open` / `open` / `start`) |
+| `--html-output` | render HTML chart to `./atop-flame.html` |
+| `--browser PATH` | browser executable to open the HTML file in (omit to just write the file) |
 | `--top N` | show top N processes by CPU ticks (default: 30) |
 
 ## Dependencies

@@ -1,0 +1,26 @@
+# ── build artifacts ──────────────────────────────────────────────────────────
+.bin/
+.release/
+
+# ── go test / coverage ───────────────────────────────────────────────────────
+*.test
+*.prof
+coverage.out
+coverage.html
+coverage_no_mocks.out
+
+# ── generated charts ─────────────────────────────────────────────────────────
+# default --html-output path; ignore it at the repo root so chart runs do not
+# accidentally land in commits. (test cases write to tmpdirs, not here.)
+/atop-flame.html
+
+# ── editor / IDE ─────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── OS junk ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
